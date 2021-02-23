@@ -1,32 +1,20 @@
-DROP DATABASE IF EXISTS employee_trackerDB;
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ('Peter', 'Peterson', 01, 100);
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ('Jimmy', 'Jimmerson', 02, 100);
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ('Tommy', 'Tommersome', 03, 100)
 
-CREATE DATABASE employee_trackerDB;
+INSERT INTO role (id, title, salary, manager_id)
+VALUES ('10', Manager', 60000, 100);
+INSERT INTO role (id, title, salary, manager_id)
+VALUES ('10', Manager', 60000, 100);
+INSERT INTO role (id, title, salary, manager_id)
+VALUES ('10', Manager', 60000, 100)
 
-USE employee_trackerDB;
-
-CREATE TABLE department (
-  
-    id INT AUTO_INCRIMENT PRIMARY KEY,
-    name VARCHAR(30)
-);
-
-
-CREATE TABLE role (
-  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  title VARCHAR(30) ,
-  salary INT,
-  department_id INT 
-
-);
-
-
-CREATE TABLE employee (
-
-  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  first_name VARCHAR(30),
-  last_name VARCHAR(30),
-  role_id INT,
-  manager_id INT NULL
-);
-
-
+INSERT INTO department (id, name)
+VALUES ('12', Department3');
+INSERT INTO department (id, name)
+VALUES ('12', Department4');
+INSERT INTO department (id, name)
+VALUES ('12', Department5')

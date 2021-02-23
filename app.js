@@ -23,115 +23,110 @@ const completeTable = [];
 
 
 
-function beginAdd() {
+function initialCommand() {
 inquirer.prompt([
     {
-    type: 'list',
-    name: 'option1',
-    message: 'Add Department or stop application?',
-    choices: [
-        'Add Department',
-        'Stop Application',
-       ]
-}
-// answer could be response
-]) .then((answer) => {
-     
-        if (answer.option1 === 'Add Department'){
-                departmentInfo();}
+      name: 'action',
+      type: 'list',
+      message: 'What would you like to do?',
+      choices: [
+          'View All Departments',
+          'View All Positions',
+          'View All Employees',
+          'Add a Department',
+          'Add a Position',
+          'Add an Employee',
+          'View Employees By Department',
+          'View Employees by Manager',
+          'Search a Position',
+          'Update Employee Positions',
+          'Exit'
+      ],
+  })
+  .then((answer) => {
+      switch (answer.action) {
+          case 'View All Departments':
+              departmentInfo();
+              break;
+          case 'View All Positions':
+              allPositions();
+              break;
+          case 'View All Employees':
+              allEmployees();
+              break;
+          case 'Add a Department':
+              addDepartment();
+              break;
+          case 'Add a Position':
+              addPosition();
+              break;
+          case 'Add an Employee':
+              addEmployee();
+              break;
+          case 'View Employees by Department':
+              employeeByDepartment();
+              break;
+          case 'View Employees by Manager':
+                  employeeByManager();
+                  break;
+          case 'Search a Position':
+              searchPosition();
+              break;
+          case 'Update Employee Positions':
+              updateEmployee();
+              break;
+          case 'Exit':
+              console.log("Have a good day!")
+              connection.end();
+              break;
+      }
+  });
+};
 
-        else {                  
-             connection.end();
-                }
-    });
-}
 
 
+function allDepartments() {
+  connection.query("SELECT * FROM department", function(err, res) {
+      if (err) throw err;
+      console.table(res);
+      initialCommand();
+  });
+};
 
+function allPositions() {
+  connection.query("SELECT * FROM position", function(err, res) {
+      if (err) throw err;
+      console.table(res);
+      initialCommand();
+  });
+};
 
-const departmentInfo = () => {
-    // const answers = await 
-    inquirer.prompt([
-        {
-            name: 'Department_name',
-            type: 'input',
-            message: 'Enter Department Name:' 
-        }
-    ]).then((answer) => {
-        
-        connection.query(
-        "INSERT INTO department SET ?", 
-        {
-           name: answer.name
-        })
-        var name = answer.name
-        console.table([name])
-        })}
+function allEmployees() {
+  connection.query("SELECT * FROM employee", function(err, res) {
+      if (err) throw err;
+      console.table(res);
+      initialCommand();
+  });
+};
 
+function addDepartment() {
+  inquirer.prompt({
+      name: 'department',
+      type: 'input',
+      message: 'Enter the name of the new department:',
+      validate: async function confirmStringInput(input) {
+          if (input.trim() != "" && input.trim().length <= 25) {
+              return true;
+          }
+          return "Invalid department name. Please limit name to 25 characters or fewer.";
+      },
+  }).then((answer) => { 
+      const query = `INSERT INTO department (name) VALUES (?)`
+      connection.query(query, [answer.department], (err, res) => {
+          if (err) throw err;
+          console.log("New department was successfully created!")
+          initialCommand();
+  });
+});
+};
 
-// const roleInfoAdd = () => {
-//     inquirer.prompt([
-//         { 
-//             name: 'role_id',
-//             type: 'input',
-//             message: 'Enter Role ID'
-//         },
-//         {
-//             name: 'role_title',
-//             type: 'input',
-//             message: 'Enter role title:' 
-//         },
-//         {
-//             name: 'role_salary',
-//             type: 'input',
-//             message: 'Enter role salary:' 
-//         },
-//         {
-//             name: 'department_id',
-//             type: 'input',
-//             message: 'Please reenter Department ID:' 
-//         }
-//     ]).then(addInfo => {
-//         const employeeInfoAdd = new role (addInfo.role_id, addInfo.role_title, addInfo.role_salary, addInfo.department_id)
-//         completeTable.push(employeeInfoAdd)
-//         employeeInfo();
-//     })
-//     }
-
-//     const employeeInfo = () => {
-//         inquirer.prompt([
-//             { 
-//                 name: 'employee_id',
-//                 type: 'input',
-//                 message: 'Enter employee ID'
-//             },
-//             {
-//                 name: 'employee_firstName',
-//                 type: 'input',
-//                 message: 'Enter employee first name:' 
-//             },
-//             {
-//                 name: 'employee_lastName',
-//                 type: 'input',
-//                 message: 'Enter employee last name:' 
-//             },
-//             {
-//                 name: 'role_id',
-//                 type: 'input',
-//                 message: 'Enter role ID:' 
-//             },
-//             {
-//                 name: 'manager_id',
-//                 type: 'input',
-//                 message: 'Enter Manager ID:' 
-//             }
-//         ]).then(addInfo => {
-//             const employeeInfoAdd = new employee (addInfo.employee_id, addInfo.employee_firstName, addInfo.employee_lastName, addInfo.role_id, addInfo.manager_id)
-//             completeTable.push(employeeInfoAdd)
-//             // beginAdd();
-//         })
-//         }
-// beginAdd();
-// console.table(completeTable);
-
-// }};
